@@ -1,0 +1,36 @@
+name: Build Jarvis APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code download karo
+        uses: actions/checkout@v4
+
+      - name: Zip kholo
+        run: unzip -o jarvis-v1-fixed.zip
+
+      - name: JDK 17 set karo
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle set karo
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.2'
+
+      - name: APK banao
+        run: cd jarvis && gradle assembleDebug
+
+      - name: APK save karo
+        uses: actions/upload-artifact@v4
+        with:
+          name: jarvis-apk
+          path: jarvis/app/build/outputs/apk/debug/app-debug.apk
